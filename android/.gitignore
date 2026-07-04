@@ -1,0 +1,8 @@
+# Managed by the parent monorepo. Android build outputs.
+/build/
+/app/build/
+/.gradle/
+/local.properties
+/*.iml
+/.idea/
+/captures/

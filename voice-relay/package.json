@@ -1,0 +1,21 @@
+{
+  "name": "sana-voice-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Twilio Media Streams ↔ Deepgram ↔ Gemini ↔ ElevenLabs low-latency voice relay for Sana AI Study Coach.",
+  "type": "module",
+  "scripts": {
+    "start": "bun run server.ts",
+    "dev": "bun run --hot server.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "bun": ">=1.1.0"
+  }
+}

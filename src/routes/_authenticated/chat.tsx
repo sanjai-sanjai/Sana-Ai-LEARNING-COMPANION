@@ -809,7 +809,7 @@ function Chat() {
       <ChatHistoryDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)}
                          threads={threads} activeId={threadId}
                          onSelect={(id) => { setThreadId(id); setDrawerOpen(false); setHeroDismissed(true); }}
-                         onNew={newChat} />
+                         onNew={newChat} avatarUrl={resolvedAvatarUrl} />
 
       <ConnectorSheet open={sheetOpen} onClose={() => setSheetOpen(false)}
                       onAction={(prompt) => { setSheetOpen(false); send(prompt); }}
@@ -972,10 +972,11 @@ function QuickTile({ icon, label, sub, to, onClick, disabled, busy }: { icon: Re
   return <button type="button" onClick={onClick} disabled={disabled} aria-busy={busy || undefined} aria-label={label}>{inner}</button>;
 }
 
-function ChatHistoryDrawer({ open, onClose, threads, activeId, onSelect, onNew }: {
+function ChatHistoryDrawer({ open, onClose, threads, activeId, onSelect, onNew, avatarUrl }: {
   open: boolean; onClose: () => void;
   threads: { id: string; title: string; last_message_at: string }[];
   activeId: string | null; onSelect: (id: string) => void; onNew: () => void;
+  avatarUrl: string;
 }) {
   const grouped = groupThreads(threads);
   return (
@@ -1033,7 +1034,7 @@ function ChatHistoryDrawer({ open, onClose, threads, activeId, onSelect, onNew }
               ))}
             </div>
             <div className="mt-3 flex items-center gap-3 border-t border-border pt-3">
-              <img src={resolvedAvatarUrl} className="h-10 w-10 rounded-full object-cover" alt="me" />
+              <img src={avatarUrl} className="h-10 w-10 rounded-full object-cover" alt="me" />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-bold">You</div>
                 <div className="text-[11px] text-muted-foreground">🔥 12 Day Streak</div>

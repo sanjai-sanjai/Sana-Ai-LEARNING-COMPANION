@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { GradientButton } from "@/components/app/GradientButton";
 import sanaHero from "@/assets/sana-hero.png";
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, Users, Check, X } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, Users, Check, X, Camera, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { validatePhone } from "@/lib/phone";
 
@@ -26,6 +26,24 @@ function Auth() {
   const [username, setUsername] = useState("");
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
   const [usernameError, setUsernameError] = useState("");
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  function handleAvatarSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5 MB");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image");
+      return;
+    }
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
 
   useEffect(() => {
     if (mode !== "signup") return;
@@ -104,6 +122,12 @@ function Auth() {
           return;
         }
 
+        if (!avatarFile) {
+          toast.error("Profile picture is required.");
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -126,13 +150,27 @@ function Auth() {
               toast.error("Email confirmations are rate-limited on this project. Disable 'Confirm email' in Supabase Auth settings, or try again later.");
               return;
             }
-            if (signInData.user) await persistProfileFields(signInData.user.id);
+            if (signInData.user) {
+              const ext = avatarFile.name.split(".").pop()?.toLowerCase() || "jpg";
+              const path = `avatars/${signInData.user.id}-${Date.now()}.${ext}`;
+              const { error: upErr } = await supabase.storage.from("user-uploads").upload(path, avatarFile, { upsert: true, contentType: avatarFile.type });
+              if (!upErr) {
+                await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", signInData.user.id);
+              }
+              await persistProfileFields(signInData.user.id);
+            }
             nav({ to: "/home" });
             return;
           }
           throw error;
         }
         if (data.session && data.user) {
+          const ext = avatarFile.name.split(".").pop()?.toLowerCase() || "jpg";
+          const path = `avatars/${data.user.id}-${Date.now()}.${ext}`;
+          const { error: upErr } = await supabase.storage.from("user-uploads").upload(path, avatarFile, { upsert: true, contentType: avatarFile.type });
+          if (!upErr) {
+            await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", data.user.id);
+          }
           await persistProfileFields(data.user.id);
           toast.success("Account created");
           nav({ to: "/onboarding" });
@@ -194,6 +232,28 @@ function Auth() {
         <form onSubmit={submit} className="mt-6 space-y-4">
           {mode === "signup" && (
             <>
+              <div className="flex flex-col items-center justify-center mb-6">
+                <div className="relative inline-block">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} className="h-24 w-24 rounded-full border-4 border-card object-cover shadow-soft" alt="avatar" />
+                  ) : (
+                    <div className="grid h-24 w-24 place-items-center rounded-full border-4 border-card bg-primary/10 text-primary shadow-soft">
+                      <Camera className="h-8 w-8" />
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("avatar-upload")?.click()}
+                    className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full gradient-primary text-primary-foreground shadow-soft active:scale-95"
+                    aria-label="Upload photo"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </button>
+                  <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={handleAvatarSelect} />
+                </div>
+                {!avatarFile && <span className="mt-2 text-xs font-bold text-destructive">Profile picture required</span>}
+              </div>
+
               <Field
                 icon={<User className="h-5 w-5" />}
                 label="Name"

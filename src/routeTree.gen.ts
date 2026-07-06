@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedStudyTogetherRouteImport } from './routes/_authenticated/study-together'
 import { Route as AuthenticatedRevisionRouteImport } from './routes/_authenticated/revision'
 import { Route as AuthenticatedReminderRouteImport } from './routes/_authenticated/reminder'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -78,6 +79,12 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudyTogetherRoute =
+  AuthenticatedStudyTogetherRouteImport.update({
+    id: '/study-together',
+    path: '/study-together',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRevisionRoute = AuthenticatedRevisionRouteImport.update({
   id: '/revision',
   path: '/revision',
@@ -280,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthenticatedProfileRoute
   '/reminder': typeof AuthenticatedReminderRoute
   '/revision': typeof AuthenticatedRevisionRouteWithChildren
+  '/study-together': typeof AuthenticatedStudyTogetherRoute
   '/api/chat': typeof ApiChatRoute
   '/classroom/announcements': typeof AuthenticatedClassroomAnnouncementsRoute
   '/classroom/assignments': typeof AuthenticatedClassroomAssignmentsRoute
@@ -318,6 +326,7 @@ export interface FileRoutesByTo {
   '/power-nap': typeof AuthenticatedPowerNapRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/reminder': typeof AuthenticatedReminderRoute
+  '/study-together': typeof AuthenticatedStudyTogetherRoute
   '/api/chat': typeof ApiChatRoute
   '/classroom/announcements': typeof AuthenticatedClassroomAnnouncementsRoute
   '/classroom/assignments': typeof AuthenticatedClassroomAssignmentsRoute
@@ -360,6 +369,7 @@ export interface FileRoutesById {
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/reminder': typeof AuthenticatedReminderRoute
   '/_authenticated/revision': typeof AuthenticatedRevisionRouteWithChildren
+  '/_authenticated/study-together': typeof AuthenticatedStudyTogetherRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/classroom/announcements': typeof AuthenticatedClassroomAnnouncementsRoute
   '/_authenticated/classroom/assignments': typeof AuthenticatedClassroomAssignmentsRoute
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reminder'
     | '/revision'
+    | '/study-together'
     | '/api/chat'
     | '/classroom/announcements'
     | '/classroom/assignments'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/power-nap'
     | '/profile'
     | '/reminder'
+    | '/study-together'
     | '/api/chat'
     | '/classroom/announcements'
     | '/classroom/assignments'
@@ -481,6 +493,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile'
     | '/_authenticated/reminder'
     | '/_authenticated/revision'
+    | '/_authenticated/study-together'
     | '/api/chat'
     | '/_authenticated/classroom/announcements'
     | '/_authenticated/classroom/assignments'
@@ -565,6 +578,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/study-together': {
+      id: '/_authenticated/study-together'
+      path: '/study-together'
+      fullPath: '/study-together'
+      preLoaderRoute: typeof AuthenticatedStudyTogetherRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/revision': {
       id: '/_authenticated/revision'
@@ -895,6 +915,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedReminderRoute: typeof AuthenticatedReminderRoute
   AuthenticatedRevisionRoute: typeof AuthenticatedRevisionRouteWithChildren
+  AuthenticatedStudyTogetherRoute: typeof AuthenticatedStudyTogetherRoute
   AuthenticatedVoiceCallNewRoute: typeof AuthenticatedVoiceCallNewRoute
 }
 
@@ -910,6 +931,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedReminderRoute: AuthenticatedReminderRoute,
   AuthenticatedRevisionRoute: AuthenticatedRevisionRouteWithChildren,
+  AuthenticatedStudyTogetherRoute: AuthenticatedStudyTogetherRoute,
   AuthenticatedVoiceCallNewRoute: AuthenticatedVoiceCallNewRoute,
 }
 

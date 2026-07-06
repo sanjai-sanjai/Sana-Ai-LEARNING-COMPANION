@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { TopBar } from "@/components/app/TopBar";
 import { ProgressRing } from "@/components/app/ProgressRing";
+import { StudyTogetherHomeCard } from "@/components/app/StudyTogetherHomeCard";
 import sanaHero from "@/assets/sana-hero.png";
 import {
   CalendarPlus,
@@ -250,6 +251,24 @@ function HomePage() {
           </button>
         </div>
 
+        {/* Study Together Phase 2 Entry */}
+        <StudyTogetherHomeCard />
+
+        {/* Quick Actions */}
+        <div>
+          <div className="mb-2 flex items-center justify-between px-1">
+            <div className="text-[10.5px] font-bold uppercase tracking-wider text-muted-foreground">Quick actions</div>
+            <div className="text-[10.5px] font-semibold text-muted-foreground">Swipe →</div>
+          </div>
+          <div className="grid grid-cols-5 gap-2">
+            <QuickAction to="/chat" icon={<Bot className="h-5 w-5" />} label="Ask AI" tone="text-primary" bg="bg-lavender" />
+            <QuickAction to="/reminder" icon={<Bell className="h-5 w-5" />} label="Alarm" tone="text-blue" bg="bg-blue/10" />
+            <QuickAction to="/power-nap" icon={<Moon className="h-5 w-5" />} label="Power Nap" tone="text-primary" bg="bg-lavender" />
+            <QuickAction to="/pomodoro" icon={<Timer className="h-5 w-5" />} label="Pomodoro" tone="text-destructive" bg="bg-destructive/10" />
+            <QuickAction to="/revision" icon={<BookOpen className="h-5 w-5" />} label="Revise" tone="text-blue" bg="bg-blue/10" />
+          </div>
+        </div>
+
         <UpcomingAICall
           reminders={reminders}
           onDone={(id) => doneMut.mutate(id)}
@@ -280,20 +299,7 @@ function HomePage() {
         <MiniChart />
       </section>
 
-      {/* Quick Actions */}
-      <section className="mx-4 mt-3">
-        <div className="mb-2 flex items-center justify-between px-1">
-          <div className="text-[10.5px] font-bold uppercase tracking-wider text-muted-foreground">Quick actions</div>
-          <div className="text-[10.5px] font-semibold text-muted-foreground">Swipe →</div>
-        </div>
-        <div className="grid grid-cols-5 gap-2">
-          <QuickAction to="/chat" icon={<Bot className="h-5 w-5" />} label="Ask AI" tone="text-primary" bg="bg-lavender" />
-          <QuickAction to="/reminder" icon={<Bell className="h-5 w-5" />} label="Alarm" tone="text-blue" bg="bg-blue/10" />
-          <QuickAction to="/power-nap" icon={<Moon className="h-5 w-5" />} label="Power Nap" tone="text-primary" bg="bg-lavender" />
-          <QuickAction to="/pomodoro" icon={<Timer className="h-5 w-5" />} label="Pomodoro" tone="text-destructive" bg="bg-destructive/10" />
-          <QuickAction to="/revision" icon={<BookOpen className="h-5 w-5" />} label="Revise" tone="text-blue" bg="bg-blue/10" />
-        </div>
-      </section>
+
 
       {/* Level / XP */}
       <section className="mx-4 mt-3">
